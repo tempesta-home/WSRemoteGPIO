@@ -99,7 +99,7 @@ do
 			read -a msgs <<< "$msg"
 			
 			ii=1
-			for Digital_Input in `cat $conf_unitx_diginp[$ind_unit]`
+			for Digital_Input in `cat ${conf_unitx_diginp[$ind_unit]}`
 			do
 				echo ${msgs[$ii]} > $Digital_Input
 			done

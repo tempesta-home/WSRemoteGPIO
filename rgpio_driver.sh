@@ -63,9 +63,9 @@ declare -a cmd_write_relay_status
 declare -a cmd_read_relay_status
 declare -a cmd_read_diginp_status
 
-cmd_write_relay_status["WAVESHARE"]="/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -r0 -c\$ai -a\$ind_unit -o\$timeout \$Port_Unit1 \$const_string"
-cmd_read_relay_status["WAVESHARE"]="/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -r0 -c\$ai -a\$ind_unit -o\$timeout \$Port_Unit1"
-cmd_read_diginp_status["WAVESHARE"]="/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -r0 -c\$ai -a\$ind_unit -o\$timeout \$Port_Unit1"
+cmd_write_relay_status["WAVESHARE",0]="/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -r0 -c\$ai -a\$ind_unit -o\$timeout \$Port_Unit1 \$const_string"
+cmd_read_relay_status["WAVESHARE",0]="/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -r0 -c\$ai -a\$ind_unit -o\$timeout \$Port_Unit1"
+cmd_read_diginp_status["WAVESHARE",0]="/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -r0 -c\$ai -a\$ind_unit -o\$timeout \$Port_Unit1"
 
 timer=$(date +%s)
 #timeout constant in sec (0.01-10)
@@ -77,53 +77,23 @@ timeout=1
 while true
 do
 	for ((ind_unit=1; ind_unit<=$nbunit; ind_unit++))	
-
-	##
-	## Handle Unit1 with up to 8x Relays 
-	#################################
-	index=1
-	i=1
-	j=256
-	const=0
-	declare -a const_array
-	const_string=""
-	for Relay in `cat $conf_unit1_relay`
-	do
-		ai=$index-1
-		const_array[$ai]=`cat $Relay`
-		const_string+=${const_array[$ai]}" "
-		if [[ ${const_array[$ai]} -eq $zero ]]
-		then
-			const=$((const+j))
-		else
-			const=$((const+j+i))
+	do 
+		#Write Relay Status
+		const_string=""
+		for Relay in `cat $conf_unitx_relay[$ind_unit]`
+		do
+			const_string+=`cat $Relay`" "
+		done
+		if [[ $const_string != $prev_relay_status[$ind_unit] ]]; then
+			echo ${cmd_write_relay_status[$hw_type[$ind_unit],$protocol_unitx[$ind_unit]]} 
+			$prev_const_status[$ind_unit]=$const_string
 		fi
-		index=$((index+1))
-		i=$((i*2))
-        j=$((256*i))
-	done
-
-	# Trying to limit resources usage so talking to Unit only if relay change
-	if [[ $const != $prev_const1 ]]
-	then
-		case $Protocol_unit1 in
-			0) # RS485
-				/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -r0 -c$ai -a1 -o1 $Port_Unit1 $const_string >> /dev/null
-				;;
-			1) # TCP
-				/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m enc -1 -r 3 -c 1 -a 1 $IP_Unit1 $const >> /dev/null
-				;;
-		esac
-		prev_const1=$((const))
-	fi
-
+	done 
 
 	##
 	## Latency vs CPU load
 	#################################
 #    sleep 0.1
-
-
 
 	##
 	## Heart Beat

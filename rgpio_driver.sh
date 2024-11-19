@@ -93,7 +93,8 @@ do
 		fi
 
 		if [[ ${read_diginps[$ind_unit]} -eq 1 ]]; then
-			cmd=${cmd_write_relay_status[${hw_type[$ind_unit]},${protocol_unitx[$ind_unit]}]}
+			cmd=${cmd_read_diginp_status[${hw_type[$ind_unit]},${protocol_unitx[$ind_unit]}]}
+			eval "$($cmd)"
 			eval "msg=$($cmd)"
 			echo $msg
 		fi

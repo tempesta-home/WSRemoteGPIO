@@ -101,10 +101,14 @@ do
 	i=1
 	j=256
 	const=0
+	declare -a const_array
+	const_string=""
 	for Relay in `cat $conf_unit1_relay`
 	do
-		value=`cat $Relay`
-		if [[ $value -eq $zero ]]
+		const_array[$i]=`cat $Relay`
+		const_string+=$const_array[$i]
+        const_string+=" "
+		if [[ $const_array[i] -eq $zero ]]
 		then
 			const=$((const+j))
 		else
@@ -116,6 +120,8 @@ do
 	done
 
 	echo $const
+	echo $const_array
+	echo $const_string
 	exit
 
 	# Trying to limit resources usage so talking to Unit only if relay change
@@ -123,7 +129,7 @@ do
 		then
 			case $Protocol_unit1 in
 				0) # RS485
-					/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b 115200 -p none -d 8 -1 -r 3 -s 1 -c 1 -a 1 $Port_Unit1 $const >> /dev/null
+					/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -r0 -c1 -a1 -o1 $Port_Unit1 $const >> /dev/null
 					;;
 				1) # TCP
 					/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m enc -1 -r 3 -c 1 -a 1 $IP_Unit1 $const >> /dev/null

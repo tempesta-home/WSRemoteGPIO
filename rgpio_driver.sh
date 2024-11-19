@@ -55,7 +55,7 @@ do
 
 	protocol_unitx[$ind_unit]=$(get_setting /Settings/RemoteGPIO/Unit${ind_unit}/Protocol)
 	port_unitx[$ind_unit]=$(get_string /Settings/RemoteGPIO/Unit${ind_unit}/USB_Port)
-	ip_unitx[$ind_unit]=$(get_string /Settings/RemoteGPIO/Unit{$ind_unit}/IP)	
+	ip_unitx[$ind_unit]=$(get_string /Settings/RemoteGPIO/Unit${ind_unit}/IP)	
 	hw_type[$ind_unit]="WAVESHARE"
 done 
 
@@ -80,13 +80,13 @@ do
 	do 
 		#Write Relay Status
 		const_string=""
-		for Relay in `cat $conf_unitx_relay[$ind_unit]`
+		for Relay in `cat ${conf_unitx_relay[$ind_unit]}`
 		do
 			const_string+=`cat $Relay`" "
 		done
-		if [[ $const_string != $prev_relay_status[$ind_unit] ]]; then
+		if [[ ${const_string} != ${prev_relay_status[$ind_unit]} ]]; then
 			echo ${cmd_write_relay_status[$hw_type[$ind_unit],$protocol_unitx[$ind_unit]]} 
-			$prev_const_status[$ind_unit]=$const_string
+			prev_const_status[$ind_unit]=${const_string}
 		fi
 	done 
 

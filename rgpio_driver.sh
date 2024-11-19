@@ -105,10 +105,10 @@ do
 	const_string=""
 	for Relay in `cat $conf_unit1_relay`
 	do
-		${!const_array[$index]}=`cat $Relay`
-		const_string+=${!const_array[$index]}
+		const_array[$index-1]=`cat $Relay`
+		const_string+=${const_array[$index-1]}
         const_string+=" "
-		if [[ ${!const_array[$index]} -eq $zero ]]
+		if [[ ${const_array[$index-1]} -eq $zero ]]
 		then
 			const=$((const+j))
 		else

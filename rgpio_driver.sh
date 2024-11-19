@@ -37,6 +37,11 @@ declare -a prev_diginp_status
 declare -a read_relays
 declare -a read_diginps
 
+declare -a protocol_unitx
+declare -a port_unitx
+declare -a ip_unitx
+declare -a hw_type
+
 for ((ind_unit=1; ind_unit<=$nbunit; ind_unit++))
 do
 	conf_unitx_relay[$ind_unit]="/data/RemoteGPIO/FileSets/Conf/Relays_unit"${ind_unit}".conf"
@@ -47,56 +52,31 @@ do
 
 	read_relays[$ind_unit]=$(get_setting /Settings/RemoteGPIO/Unit${ind_unit}/ReadRelays)
 	read_diginps[$ind_unit]=$(get_setting /Settings/RemoteGPIO/Unit${ind_unit}/ReadDigin)
+
+	protocol_unitx[$ind_unit]=$(get_setting /Settings/RemoteGPIO/Unit${ind_unit}/Protocol)
+	port_unitx[$ind_unit]=$(get_string /Settings/RemoteGPIO/Unit${ind_unit}/USB_Port)
+	ip_unitx[$ind_unit]=$(get_string /Settings/RemoteGPIO/Unit{$ind_unit}/IP)	
+	hw_type[$ind_unit]="WAVESHARE"
 done 
 
+declare -a cmd_write_relay_status
+declare -a cmd_read_relay_status
+declare -a cmd_read_diginp_status
+
+cmd_write_relay_status["WAVESHARE"]="/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -r0 -c\$ai -a\$ind_unit -o\$timeout \$Port_Unit1 \$const_string"
+cmd_read_relay_status["WAVESHARE"]="/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -r0 -c\$ai -a\$ind_unit -o\$timeout \$Port_Unit1"
+cmd_read_diginp_status["WAVESHARE"]="/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -r0 -c\$ai -a\$ind_unit -o\$timeout \$Port_Unit1"
+
 timer=$(date +%s)
-
-exit
-
-##
-## Handle up to 3 units and multi-protocol
-###########################################
-
-if [[ $nbunit -gt $zero ]]
-then
-	# One unit. Reading Protocol, port and IP address
-	Protocol_unit1=$(get_setting /Settings/RemoteGPIO/Unit1/Protocol)
-	Port_Unit1=$(get_string /Settings/RemoteGPIO/Unit1/USB_Port)
-	IP_Unit1=$(get_string /Settings/RemoteGPIO/Unit1/IP)
-else
-	Protocol_unit1=
-	Port_Unit1=
-	IP_Unit1=
-fi
-if [[ $nbunit -gt 1 ]]
-then
-	# Two unit. Reading Protocol, port and IP address
-	Protocol_unit2=$(get_setting /Settings/RemoteGPIO/Unit2/Protocol)
-	Port_Unit2=$(get_string /Settings/RemoteGPIO/Unit2/USB_Port)
-	IP_Unit2=$(get_string /Settings/RemoteGPIO/Unit2/IP)
-else
-	Protocol_unit2=
-	Port_Unit2=
-	IP_Unit2=
-fi
-if [[ $nbunit -gt 2 ]]
-then
-	# Three unit. Reading Protocol, port and IP address
-	Protocol_unit3=$(get_setting /Settings/RemoteGPIO/Unit3/Protocol)
-	Port_Unit3=$(get_string /Settings/RemoteGPIO/Unit3/USB_Port)
-	IP_Unit3=$(get_string /Settings/RemoteGPIO/Unit3/IP)
-else
-	Protocol_unit3=
-	Port_Unit3=
-	IP_Unit3=
-fi			
+#timeout constant in sec (0.01-10)
+timeout=1
 
 ##
 ## Main loop
 ###############################
 while true
 do
-
+	for ((ind_unit=1; ind_unit<=$nbunit; ind_unit++))	
 
 	##
 	## Handle Unit1 with up to 8x Relays 

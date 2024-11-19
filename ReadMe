@@ -1,5 +1,12 @@
-*********************************************************
-***********              RemoteGPIO               *******
+Targets of this fork:
+- enable support for https://www.waveshare.com/wiki/Modbus_RTU_IO_8CH
+- enable support for https://www.waveshare.com/wiki/Modbus_RTU_Relay_(D)
+
+As I already saw, just small modifications of the driver are needed
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+**********************************************************
+***********              RemoteGPIO               ********
 ***********   PLEASE READ IMPORTANT INFORMATION   ********
 ***********   INSTALL/SETUP INSTRUCTIONS BELOW    ********
 **********************************************************

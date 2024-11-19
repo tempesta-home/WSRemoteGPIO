@@ -7,21 +7,6 @@
 
 exec 2>&1
 
-conf_unit1_relay="/data/RemoteGPIO/FileSets/Conf/Relays_unit1.conf"
-conf_unit1_digitalinput="/data/RemoteGPIO/FileSets/Conf/Digital_Inputs_unit1.conf"
-conf_unit2_relay="/data/RemoteGPIO/FileSets/Conf/Relays_unit2.conf"
-conf_unit2_digitalinput="/data/RemoteGPIO/FileSets/Conf/Digital_Inputs_unit2.conf"
-conf_unit3_relay="/data/RemoteGPIO/FileSets/Conf/Relays_unit3.conf"
-conf_unit3_digitalinput="/data/RemoteGPIO/FileSets/Conf/Digital_Inputs_unit3.conf"
-zero=0
-prev_const1=0
-prev_const2=0
-prev_const3=0
-prev_statea=0
-prev_stateb=0
-prev_statec=0
-timer=$(date +%s)
-
 ##
 ## Handle Dbus Settings
 ###############################
@@ -40,19 +25,38 @@ get_string()
 		dbus-send --print-reply=literal --system --type=method_call --dest=com.victronenergy.settings $1 com.victronenergy.BusItem.GetValue | awk '/variant/ { print $2 }'
 	}
 
-readrelays1=$(get_setting /Settings/RemoteGPIO/Unit1/ReadRelays)
-readdigin1=$(get_setting /Settings/RemoteGPIO/Unit1/ReadDigin)
-readrelays2=$(get_setting /Settings/RemoteGPIO/Unit2/ReadRelays)
-readdigin2=$(get_setting /Settings/RemoteGPIO/Unit2/ReadDigin)
-readrelays3=$(get_setting /Settings/RemoteGPIO/Unit3/ReadRelays)
-readdigin3=$(get_setting /Settings/RemoteGPIO/Unit3/ReadDigin)
+zero=0
+nbunit=$(get_setting /Settings/RemoteGPIO/NumberUnits)
 
+declare -a conf_unitx_relay
+declare -a conf_unitx_diginp
+
+declare -a prev_relay_status
+declare -a prev_diginp_status
+
+declare -a read_relays
+declare -a read_diginps
+
+for ((ind_unit=1; ind_unit<=$nbunit; ind_unit++))
+do
+	conf_unitx_relay[$ind_unit]="/data/RemoteGPIO/FileSets/Conf/Relays_unit"${ind_unit}".conf"
+	conf_unitx_diginp[$ind_unit]="/data/RemoteGPIO/FileSets/Conf/Digital_Inputs_unit"${ind_unit}".conf"
+
+	prev_relay_status[$ind_unit]=""
+	prev_diginp_status[$ind_unit]=""
+
+	read_relays[$ind_unit]=$(get_setting /Settings/RemoteGPIO/Unit${ind_unit}/ReadRelays)
+	read_diginps[$ind_unit]=$(get_setting /Settings/RemoteGPIO/Unit${ind_unit}/ReadDigin)
+done 
+
+timer=$(date +%s)
+
+exit
 
 ##
 ## Handle up to 3 units and multi-protocol
 ###########################################
 
-nbunit=$(get_setting /Settings/RemoteGPIO/NumberUnits)
 if [[ $nbunit -gt $zero ]]
 then
 	# One unit. Reading Protocol, port and IP address

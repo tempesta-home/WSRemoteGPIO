@@ -85,7 +85,7 @@ do
 			const_string+=`cat $Relay`" "
 		done
 		if [[ ${const_string} != ${prev_relay_status[$ind_unit]} ]]; then
-			echo ${cmd_write_relay_status[$hw_type[$ind_unit],$protocol_unitx[$ind_unit]]} 
+			echo ${cmd_write_relay_status[${hw_type[$ind_unit]},${protocol_unitx[$ind_unit]}]} 
 			prev_const_status[$ind_unit]=${const_string}
 		fi
 	done 

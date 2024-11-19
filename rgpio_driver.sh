@@ -63,9 +63,9 @@ declare -a cmd_write_relay_status
 declare -a cmd_read_relay_status
 declare -a cmd_read_diginp_status
 
-cmd_write_relay_status["WAVESHARE",0]="/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -r0 -c\$ai -a\$ind_unit -o\$timeout \$Port_Unit1 \$const_string"
-cmd_read_relay_status["WAVESHARE",0]="/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -r0 -c\$ai -a\$ind_unit -o\$timeout \$Port_Unit1"
-cmd_read_diginp_status["WAVESHARE",0]="/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -r0 -c\$ai -a\$ind_unit -o\$timeout \$Port_Unit1"
+cmd_write_relay_status["WAVESHARE",0]="/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -t0 -r0 -c\$ai -a\$ind_unit -o\$timeout \${port_unitx[\$ind_unit]} \$const_string"
+cmd_read_relay_status["WAVESHARE",0]="/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -t0 -r0 -c\$ai -a\$ind_unit -o\$timeout \${port_unitx[\$ind_unit]}"
+cmd_read_diginp_status["WAVESHARE",0]="/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -t1 -r0 -c\$ai -a\$ind_unit -o\$timeout \${port_unitx[\$ind_unit]}"
 
 timer=$(date +%s)
 #timeout constant in sec (0.01-10)
@@ -80,14 +80,15 @@ do
 	do 
 		#Write Relay Status
 		const_string=""
+		ai=0
 		for Relay in `cat ${conf_unitx_relay[$ind_unit]}`
 		do
 			const_string+=`cat $Relay`" "
+			((ai++))
 		done
 		if [[ ${const_string} != ${prev_relay_status[$ind_unit]} ]]; then
-			echo ${hw_type[$ind_unit]}
-			echo ${protocol_unitx[$ind_unit]}
-			echo `$((${cmd_write_relay_status[${hw_type[$ind_unit]},${protocol_unitx[$ind_unit]}]}))` 
+			cmd=${cmd_write_relay_status[${hw_type[$ind_unit]},${protocol_unitx[$ind_unit]}]}
+			eval "$cmd"
 			prev_relay_status[$ind_unit]=${const_string}
 		fi
 	done 

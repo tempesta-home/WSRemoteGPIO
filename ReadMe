@@ -2,7 +2,12 @@ Targets of this fork:
 - enable support for https://www.waveshare.com/wiki/Modbus_RTU_IO_8CH
 - enable support for https://www.waveshare.com/wiki/Modbus_RTU_Relay_(D)
 
-As I already saw, just small modifications of the driver are needed
+As I already saw, just small modifications of the driver are needed.
+At first I will get it working on my setup, a Cerbo GX, substituting the "modpoll" commands in rgpio_driver and "breaking" the Dingtian HW support.
+Then I could focus on retro-compatibility
+
+If everything will go fine at the end I could submit a pull request for merge.
+
 ________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 **********************************************************

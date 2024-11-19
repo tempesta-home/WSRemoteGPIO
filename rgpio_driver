@@ -54,42 +54,39 @@ readdigin3=$(get_setting /Settings/RemoteGPIO/Unit3/ReadDigin)
 ###########################################
 
 nbunit=$(get_setting /Settings/RemoteGPIO/NumberUnits)
-case $nbunit in
-		0)
-			# Do nothing
-			;;
-		1)
-			# One unit. Reading Protocol, port and IP address
-			Protocol_unit1=$(get_setting /Settings/RemoteGPIO/Unit1/Protocol)
-			Port_Unit1=$(get_string /Settings/RemoteGPIO/Unit1/USB_Port)
-			IP_Unit1=$(get_string /Settings/RemoteGPIO/Unit1/IP)
-			;;
-		2)
-			# Two units. Reading Protocols, ports and IP addresses
-			Protocol_unit1=$(get_setting /Settings/RemoteGPIO/Unit1/Protocol)
-			Port_Unit1=$(get_string /Settings/RemoteGPIO/Unit1/USB_Port)
-			IP_Unit1=$(get_string /Settings/RemoteGPIO/Unit1/IP)
-			
-			Protocol_unit2=$(get_setting /Settings/RemoteGPIO/Unit2/Protocol)
-			Port_Unit2=$(get_string /Settings/RemoteGPIO/Unit2/USB_Port)
-			IP_Unit2=$(get_string /Settings/RemoteGPIO/Unit2/IP)
-			;;
-		3)
-			# Three units. Reading Protocols, ports and IP addresses
-			Protocol_unit1=$(get_setting /Settings/RemoteGPIO/Unit1/Protocol)
-			Port_Unit1=$(get_string /Settings/RemoteGPIO/Unit1/USB_Port)
-			IP_Unit1=$(get_string /Settings/RemoteGPIO/Unit1/IP)
-			
-			Protocol_unit2=$(get_setting /Settings/RemoteGPIO/Unit2/Protocol)
-			Port_Unit2=$(get_string /Settings/RemoteGPIO/Unit2/USB_Port)
-			IP_Unit2=$(get_string /Settings/RemoteGPIO/Unit2/IP)
-
-			Protocol_unit3=$(get_setting /Settings/RemoteGPIO/Unit3/Protocol)
-			Port_Unit3=$(get_string /Settings/RemoteGPIO/Unit3/USB_Port)
-			IP_Unit3=$(get_string /Settings/RemoteGPIO/Unit3/IP)
-			;;
-esac
-
+if [[ $nbunit -gt $zero ]]
+then
+	# One unit. Reading Protocol, port and IP address
+	Protocol_unit1=$(get_setting /Settings/RemoteGPIO/Unit1/Protocol)
+	Port_Unit1=$(get_string /Settings/RemoteGPIO/Unit1/USB_Port)
+	IP_Unit1=$(get_string /Settings/RemoteGPIO/Unit1/IP)
+else
+	Protocol_unit1=
+	Port_Unit1=
+	IP_Unit1=
+fi
+if [[ $nbunit -gt 1 ]]
+then
+	# Two unit. Reading Protocol, port and IP address
+	Protocol_unit2=$(get_setting /Settings/RemoteGPIO/Unit2/Protocol)
+	Port_Unit2=$(get_string /Settings/RemoteGPIO/Unit2/USB_Port)
+	IP_Unit2=$(get_string /Settings/RemoteGPIO/Unit2/IP)
+else
+	Protocol_unit2=
+	Port_Unit2=
+	IP_Unit2=
+fi
+if [[ $nbunit -gt $2 ]]
+then
+	# Three unit. Reading Protocol, port and IP address
+	Protocol_unit3=$(get_setting /Settings/RemoteGPIO/Unit3/Protocol)
+	Port_Unit3=$(get_string /Settings/RemoteGPIO/Unit3/USB_Port)
+	IP_Unit3=$(get_string /Settings/RemoteGPIO/Unit3/IP)
+else
+	Protocol_unit1=
+	Port_Unit1=
+	IP_Unit1=
+fi			
 
 ##
 ## Main loop

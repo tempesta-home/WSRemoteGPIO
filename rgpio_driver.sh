@@ -92,11 +92,17 @@ do
 			prev_relay_status[$ind_unit]=${const_string}
 		fi
 
+		declare -a msg
 		if [[ ${read_diginps[$ind_unit]} -eq 1 ]]; then
 			cmd=${cmd_read_diginp_status[${hw_type[$ind_unit]},${protocol_unitx[$ind_unit]}]}
-			eval "$($cmd)"
-			eval "msg=$($cmd)"
-			echo $msg
+			msg=$(eval "$cmd" | grep "\[" | awk -F'[^0-9]*' '{print $3}')
+			read -a msgs <<< "$msg"
+			
+			ii=1
+			for Digital_Input in `cat $conf_unitx_diginp[$ind_unit]`
+			do
+				echo ${msgs[$ii]} > $Digital_Input
+			done
 		fi
 
 		#		case $Protocol_unit1 in

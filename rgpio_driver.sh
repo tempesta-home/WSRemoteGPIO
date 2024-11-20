@@ -92,23 +92,18 @@ do
 			prev_relay_status[$ind_unit]=${const_string}
 		fi
 
+		#Read Digital Inputs Status
 		declare -a msg
 		if [[ ${read_diginps[$ind_unit]} -eq 1 ]]; then
 			cmd=${cmd_read_diginp_status[${hw_type[$ind_unit]},${protocol_unitx[$ind_unit]}]}
 			msg=$(eval "$cmd" | grep "\[" | awk -F'[^0-9]*' '{print $3}')
-			const_string=echo "$msg" | tr '\n' ' '
+			const_string=$(echo "$msg" | tr '\n' ' ')
 			
-			echo "ind_unit "$ind_unit
-			echo "const_string "$const_string
-			echo "prev " ${prev_diginp_status[$ind_unit]}
-
 			if [[ ${const_string} != ${prev_diginp_status[$ind_unit]} ]]; then
 				ii=1
 				for Digital_Input in `cat ${conf_unitx_diginp[$ind_unit]}`
 				do
 					iind=$((($ii-1)*2))
-					#echo $iind
-					#echo ${const_string:${iind}:1}
 					echo ${const_string:${iind}:1} > $Digital_Input
 					((ii++))
 				done
@@ -116,6 +111,30 @@ do
 			fi
 		fi
 
+		#Read Relay Status
+		declare -a msg
+		if [[ ${read_relays[$ind_unit]} -eq 1 ]]; then
+			cmd=${cmd_read_relay_status[${hw_type[$ind_unit]},${protocol_unitx[$ind_unit]}]}
+			msg=$(eval "$cmd" | grep "\[" | awk -F'[^0-9]*' '{print $3}')
+			const_string=$(echo "$msg" | tr '\n' ' ')
+			
+			#echo "ind_unit "$ind_unit
+			#echo "const_string "$const_string
+			#echo "prev " ${prev_diginp_status[$ind_unit]}
+
+			if [[ ${const_string} != ${prev_relay_status[$ind_unit]} ]]; then
+				ii=1
+				for Relay in `cat ${conf_unitx_relay[$ind_unit]}`
+				do
+					iind=$((($ii-1)*2))
+					#echo $iind
+					#echo ${const_string:${iind}:1}
+					echo ${const_string:${iind}:1} > $Relay
+					((ii++))
+				done
+				prev_relay_status[$ind_unit]=${const_string}
+			fi
+		fi
 
 	done 
 

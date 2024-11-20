@@ -100,14 +100,14 @@ do
 			
 			echo "ind_unit "$ind_unit
 			echo "const_string "$const_string
-			echo "prev " {prev_diginp_status[$ind_unit]}
+			echo "prev " ${prev_diginp_status[$ind_unit]}
 
 			if [[ ${const_string} != ${prev_diginp_status[$ind_unit]} ]]; then
-				read -a msgs <<< "$msg"
 				ii=1
 				for Digital_Input in `cat ${conf_unitx_diginp[$ind_unit]}`
 				do
-					echo ${msgs[$ii]} > $Digital_Input
+					echo ${const_string:(($ii*2-1)):1}
+					echo ${const_string:(($ii*2-1)):1} > $Digital_Input
 				done
 				prev_diginp_status[$ind_unit]=${const_string}
 			fi

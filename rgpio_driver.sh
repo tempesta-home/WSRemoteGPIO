@@ -106,36 +106,15 @@ do
 				ii=1
 				for Digital_Input in `cat ${conf_unitx_diginp[$ind_unit]}`
 				do
-					echo ${const_string:(($ii*2-1)):1}
-					echo ${const_string:(($ii*2-1)):1} > $Digital_Input
+					iind=$((($ii-1)*2))
+					#echo $iind
+					#echo ${const_string:${iind}:1}
+					echo ${const_string:${iind}:1} > $Digital_Input
+					((ii++))
 				done
 				prev_diginp_status[$ind_unit]=${const_string}
 			fi
 		fi
-
-		#		case $Protocol_unit1 in
-		#			0) # RS485
-		#				msg=$(echo -n $(/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b 115200 -p none -d 8 -1 -r 11 -s 1 -c 1 -a 1 $Port_Unit1) | awk '{print $NF}')
-		#				number=$(($msg))
-		#				;;
-		#			1) # TCP
-		#				msg=$(echo -n $(/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m enc -1 -r 11 -c 1 -a 1 $IP_Unit1) | awk '{print $NF}')
-		#				number=$(($msg))
-		#				;;
-		#		esac
-#
-#			if ((number >= 0 && number <= 255)); then
-#
-#				# Parsing number for writing the Input Devices
-#					i=1
-#					for Digital_Input in `cat $conf_unit1_digitalinput`
-#					do
-#						echo $((($number & $i) != 0)) > $Digital_Input
-#						i=$((i*2))
-#					done
-#			fi
-#		fi
-
 
 
 	done 

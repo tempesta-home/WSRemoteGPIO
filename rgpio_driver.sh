@@ -96,15 +96,20 @@ do
 		if [[ ${read_diginps[$ind_unit]} -eq 1 ]]; then
 			cmd=${cmd_read_diginp_status[${hw_type[$ind_unit]},${protocol_unitx[$ind_unit]}]}
 			msg=$(eval "$cmd" | grep "\[" | awk -F'[^0-9]*' '{print $3}')
+			const_string=echo "$msg" | tr '\n' ' '
 			
-			if [[ $msg != ${prev_diginp_status[$ind_unit]} ]]; then
+			echo "ind_unit "$ind_unit
+			echo "const_string "$const_string
+			echo "prev " {prev_diginp_status[$ind_unit]}
+
+			if [[ ${const_string} != ${prev_diginp_status[$ind_unit]} ]]; then
 				read -a msgs <<< "$msg"
 				ii=1
 				for Digital_Input in `cat ${conf_unitx_diginp[$ind_unit]}`
 				do
 					echo ${msgs[$ii]} > $Digital_Input
 				done
-				prev_diginp_status[$ind_unit] = msg
+				prev_diginp_status[$ind_unit]=${const_string}
 			fi
 		fi
 

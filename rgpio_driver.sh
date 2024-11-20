@@ -9,7 +9,7 @@
 # Description: waveshare compatibility
 # This driver has no explicit limit of devices or relays/digital_inputs
 # modpoll commands stay inside an array, ready for future compatibility expansions
-### END WAVESHARE INFO
+### END WAVESHARE INFO 
 
 exec 2>&1
 

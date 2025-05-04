@@ -8,12 +8,12 @@
 exec 2>&1
 
 
-conf_unit1_relay="/data/RemoteGPIO/FileSets/Conf/Relays_unit1.conf"
-conf_unit1_digitalinput="/data/RemoteGPIO/FileSets/Conf/Digital_Inputs_unit1.conf"
-conf_unit2_relay="/data/RemoteGPIO/FileSets/Conf/Relays_unit2.conf"
-conf_unit2_digitalinput="/data/RemoteGPIO/FileSets/Conf/Digital_Inputs_unit2.conf"
-conf_unit3_relay="/data/RemoteGPIO/FileSets/Conf/Relays_unit3.conf"
-conf_unit3_digitalinput="/data/RemoteGPIO/FileSets/Conf/Digital_Inputs_unit3.conf"
+conf_unit1_relay="/data/WSRemoteGPIO/FileSets/Conf/Relays_unit1.conf"
+conf_unit1_digitalinput="/data/WSRemoteGPIO/FileSets/Conf/Digital_Inputs_unit1.conf"
+conf_unit2_relay="/data/WSRemoteGPIO/FileSets/Conf/Relays_unit2.conf"
+conf_unit2_digitalinput="/data/WSRemoteGPIO/FileSets/Conf/Digital_Inputs_unit2.conf"
+conf_unit3_relay="/data/WSRemoteGPIO/FileSets/Conf/Relays_unit3.conf"
+conf_unit3_digitalinput="/data/WSRemoteGPIO/FileSets/Conf/Digital_Inputs_unit3.conf"
 zero=0
 prev_const1=0
 prev_const2=0
@@ -41,25 +41,25 @@ get_string()
 		dbus-send --print-reply=literal --system --type=method_call --dest=com.victronenergy.settings $1 com.victronenergy.BusItem.GetValue | awk '/variant/ { print $2 }'
 	}
 
-readrelays1=$(get_setting /Settings/RemoteGPIO/Unit1/ReadRelays)
-readdigin1=$(get_setting /Settings/RemoteGPIO/Unit1/ReadDigin)
-readrelays2=$(get_setting /Settings/RemoteGPIO/Unit2/ReadRelays)
-readdigin2=$(get_setting /Settings/RemoteGPIO/Unit2/ReadDigin)
-readrelays3=$(get_setting /Settings/RemoteGPIO/Unit3/ReadRelays)
-readdigin3=$(get_setting /Settings/RemoteGPIO/Unit3/ReadDigin)
+readrelays1=$(get_setting /Settings/WSRemoteGPIO/Unit1/ReadRelays)
+readdigin1=$(get_setting /Settings/WSRemoteGPIO/Unit1/ReadDigin)
+readrelays2=$(get_setting /Settings/WSRemoteGPIO/Unit2/ReadRelays)
+readdigin2=$(get_setting /Settings/WSRemoteGPIO/Unit2/ReadDigin)
+readrelays3=$(get_setting /Settings/WSRemoteGPIO/Unit3/ReadRelays)
+readdigin3=$(get_setting /Settings/WSRemoteGPIO/Unit3/ReadDigin)
 
 
 ##
 ## Handle up to 3 units and multi-protocol
 ###########################################
 
-nbunit=$(get_setting /Settings/RemoteGPIO/NumberUnits)
+nbunit=$(get_setting /Settings/WSRemoteGPIO/NumberUnits)
 if [[ $nbunit -gt $zero ]]
 then
 	# One unit. Reading Protocol, port and IP address
-	Protocol_unit1=$(get_setting /Settings/RemoteGPIO/Unit1/Protocol)
-	Port_Unit1=$(get_string /Settings/RemoteGPIO/Unit1/USB_Port)
-	IP_Unit1=$(get_string /Settings/RemoteGPIO/Unit1/IP)
+	Protocol_unit1=$(get_setting /Settings/WSRemoteGPIO/Unit1/Protocol)
+	Port_Unit1=$(get_string /Settings/WSRemoteGPIO/Unit1/USB_Port)
+	IP_Unit1=$(get_string /Settings/WSRemoteGPIO/Unit1/IP)
 else
 	Protocol_unit1=
 	Port_Unit1=
@@ -68,9 +68,9 @@ fi
 if [[ $nbunit -gt 1 ]]
 then
 	# Two unit. Reading Protocol, port and IP address
-	Protocol_unit2=$(get_setting /Settings/RemoteGPIO/Unit2/Protocol)
-	Port_Unit2=$(get_string /Settings/RemoteGPIO/Unit2/USB_Port)
-	IP_Unit2=$(get_string /Settings/RemoteGPIO/Unit2/IP)
+	Protocol_unit2=$(get_setting /Settings/WSRemoteGPIO/Unit2/Protocol)
+	Port_Unit2=$(get_string /Settings/WSRemoteGPIO/Unit2/USB_Port)
+	IP_Unit2=$(get_string /Settings/WSRemoteGPIO/Unit2/IP)
 else
 	Protocol_unit2=
 	Port_Unit2=
@@ -79,9 +79,9 @@ fi
 if [[ $nbunit -gt $2 ]]
 then
 	# Three unit. Reading Protocol, port and IP address
-	Protocol_unit3=$(get_setting /Settings/RemoteGPIO/Unit3/Protocol)
-	Port_Unit3=$(get_string /Settings/RemoteGPIO/Unit3/USB_Port)
-	IP_Unit3=$(get_string /Settings/RemoteGPIO/Unit3/IP)
+	Protocol_unit3=$(get_setting /Settings/WSRemoteGPIO/Unit3/Protocol)
+	Port_Unit3=$(get_string /Settings/WSRemoteGPIO/Unit3/USB_Port)
+	IP_Unit3=$(get_string /Settings/WSRemoteGPIO/Unit3/IP)
 else
 	Protocol_unit1=
 	Port_Unit1=
@@ -121,10 +121,10 @@ do
 		then
 			case $Protocol_unit1 in
 				0) # RS485
-					/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b 115200 -p none -d 8 -1 -r 3 -s 1 -c 1 -a 1 $Port_Unit1 $const >> /dev/null
+					/data/WSRemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b 115200 -p none -d 8 -1 -r 3 -s 1 -c 1 -a 1 $Port_Unit1 $const >> /dev/null
 					;;
 				1) # TCP
-					/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m enc -1 -r 3 -c 1 -a 1 $IP_Unit1 $const >> /dev/null
+					/data/WSRemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m enc -1 -r 3 -c 1 -a 1 $IP_Unit1 $const >> /dev/null
 					;;
 			esac
 			prev_const1=$((const))
@@ -156,10 +156,10 @@ do
         	if [ $const != $prev_const2 ]; then
 				case $Protocol_unit2 in
 					0) # RS485
-						/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b 115200 -p none -d 8 -1 -r 3 -s 1 -c 1 -a 2 $Port_Unit2 $const >> /dev/null
+						/data/WSRemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b 115200 -p none -d 8 -1 -r 3 -s 1 -c 1 -a 2 $Port_Unit2 $const >> /dev/null
 						;;
 					1) # TCP
-						/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m enc -1 -r 3 -c 1 -a 2 $IP_Unit2 $const >> /dev/null
+						/data/WSRemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m enc -1 -r 3 -c 1 -a 2 $IP_Unit2 $const >> /dev/null
 						;;
 				esac
         	fi
@@ -192,10 +192,10 @@ do
         	then
 				case $Protocol_unit3 in
 					0) # RS485
-						/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b 115200 -p none -d 8 -1 -r 3 -s 1 -c 1 -a 3 $Port_Unit3 $const >> /dev/null
+						/data/WSRemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b 115200 -p none -d 8 -1 -r 3 -s 1 -c 1 -a 3 $Port_Unit3 $const >> /dev/null
 						;;
 					1) # TCP
-						/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m enc -1 -r 3 -c 1 -a 3 $IP_Unit3 $const >> /dev/null
+						/data/WSRemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m enc -1 -r 3 -c 1 -a 3 $IP_Unit3 $const >> /dev/null
 						;;
 				esac
         	fi
@@ -209,11 +209,11 @@ do
 	if [[ $readdigin1 -eq 1 ]]; then
 			case $Protocol_unit1 in
 				0) # RS485
-					msg=$(echo -n $(/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b 115200 -p none -d 8 -1 -r 11 -s 1 -c 1 -a 1 $Port_Unit1) | awk '{print $NF}')
+					msg=$(echo -n $(/data/WSRemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b 115200 -p none -d 8 -1 -r 11 -s 1 -c 1 -a 1 $Port_Unit1) | awk '{print $NF}')
 					number=$(($msg))
 					;;
 				1) # TCP
-					msg=$(echo -n $(/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m enc -1 -r 11 -c 1 -a 1 $IP_Unit1) | awk '{print $NF}')
+					msg=$(echo -n $(/data/WSRemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m enc -1 -r 11 -c 1 -a 1 $IP_Unit1) | awk '{print $NF}')
 					number=$(($msg))
 					;;
 			esac
@@ -238,11 +238,11 @@ do
         	then
 				case $Protocol_unit2 in
 					0) # RS485
-						msg=$(echo -n $(/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b 115200 -p none -d 8 -1 -r 11 -s 1 -c 1 -a 2 $Port_Unit2) | awk '{print $NF}')
+						msg=$(echo -n $(/data/WSRemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b 115200 -p none -d 8 -1 -r 11 -s 1 -c 1 -a 2 $Port_Unit2) | awk '{print $NF}')
 						number=$(($msg))
 						;;
 					1) # TCP
-						msg=$(echo -n $(/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m enc -1 -r 11 -c 1 -a 2 $IP_Unit2) | awk '{print $NF}')
+						msg=$(echo -n $(/data/WSRemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m enc -1 -r 11 -c 1 -a 2 $IP_Unit2) | awk '{print $NF}')
 						number=$(($msg))
 						;;
 				esac
@@ -269,11 +269,11 @@ do
         	then
 				case $Protocol_unit3 in
 					0) # RS485
-						msg=$(echo -n $(/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b 115200 -p none -d 8 -1 -r 11 -s 1 -c 1 -a 3 $Port_Unit3) | awk '{print $NF}')
+						msg=$(echo -n $(/data/WSRemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b 115200 -p none -d 8 -1 -r 11 -s 1 -c 1 -a 3 $Port_Unit3) | awk '{print $NF}')
 						number=$(($msg))
 						;;
 					1) # TCP
-						msg=$(echo -n $(/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m enc -1 -r 11 -c 1 -a 3 $IP_Unit3) | awk '{print $NF}')
+						msg=$(echo -n $(/data/WSRemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m enc -1 -r 11 -c 1 -a 3 $IP_Unit3) | awk '{print $NF}')
 						number=$(($msg))
 						;;
 				esac
@@ -300,11 +300,11 @@ do
 			#################################
 			case $Protocol_unit1 in
 				0) # RS485
-					msg=$(echo -n $(/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b 115200 -p none -d 8 -1 -r 2 -s 1 -c 1 -a 1 $Port_Unit1) | awk '{print $NF}')
+					msg=$(echo -n $(/data/WSRemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b 115200 -p none -d 8 -1 -r 2 -s 1 -c 1 -a 1 $Port_Unit1) | awk '{print $NF}')
 					number=$(($msg))
 					;;
 				1) # TCP
-					msg=$(echo -n $(/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m enc -1 -r 2 -c 1 -a 1 $IP_Unit1) | awk '{print $NF}')
+					msg=$(echo -n $(/data/WSRemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m enc -1 -r 2 -c 1 -a 1 $IP_Unit1) | awk '{print $NF}')
 					number=$(($msg))
 					;;
 			esac
@@ -329,11 +329,11 @@ do
 		if [[ $nbunit -eq 2 || $nbunit -eq 3 ]]; then
 				case $Protocol_unit2 in
 					0) # RS485
-						msg=$(echo -n $(/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b 115200 -p none -d 8 -1 -r 2 -s 1 -c 1 -a 2 $Port_Unit2) | awk '{print $NF}')
+						msg=$(echo -n $(/data/WSRemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b 115200 -p none -d 8 -1 -r 2 -s 1 -c 1 -a 2 $Port_Unit2) | awk '{print $NF}')
 						number=$(($msg))
 						;;
 					1) # TCP
-						msg=$(echo -n $(/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m enc -1 -r 2 -c 1 -a 2 $IP_Unit2) | awk '{print $NF}')
+						msg=$(echo -n $(/data/WSRemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m enc -1 -r 2 -c 1 -a 2 $IP_Unit2) | awk '{print $NF}')
 						number=$(($msg))
 						;;
 				esac
@@ -360,11 +360,11 @@ do
 		if [[ $nbunit -eq 3 ]]; then
 				case $Protocol_unit3 in
 					0) # RS485
-						msg=$(echo -n $(/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b 115200 -p none -d 8 -1 -r 2 -s 1 -c 1 -a 3 $Port_Unit3) | awk '{print $NF}')
+						msg=$(echo -n $(/data/WSRemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b 115200 -p none -d 8 -1 -r 2 -s 1 -c 1 -a 3 $Port_Unit3) | awk '{print $NF}')
 						number=$(($msg))
 						;;
 					1) # TCP
-						msg=$(echo -n $(/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m enc -1 -r 2 -c 1 -a 3 $IP_Unit3) | awk '{print $NF}')
+						msg=$(echo -n $(/data/WSRemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m enc -1 -r 2 -c 1 -a 3 $IP_Unit3) | awk '{print $NF}')
 						number=$(($msg))
 						;;
 				esac
@@ -394,7 +394,7 @@ do
 	if (( (timer + 5) < $(date +%s) ))
 	then
 		timer=$(date +%s)
-		set_setting /Settings/Watchdog/RemoteGPIO variant:int32:$timer
+		set_setting /Settings/Watchdog/WSRemoteGPIO variant:int32:$timer
 		echo "Heartbeat = "$(date -d@$timer)
 	fi
 

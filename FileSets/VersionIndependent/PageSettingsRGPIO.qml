@@ -5,10 +5,10 @@ import "utils.js" as Utils
 MbPage {
 	id: root
 
-        property string rgpioSettings: "dbus/com.victronenergy.settings/Settings/RemoteGPIO"
-        property string serviceSetting: "dbus/com.victronenergy.settings/Settings/Services/RemoteGPIO"
+        property string rgpioSettings: "dbus/com.victronenergy.settings/Settings/WSRemoteGPIO"
+        property string serviceSetting: "dbus/com.victronenergy.settings/Settings/Services/WSRemoteGPIO"
 
-	title: qsTr("RemoteGPIO")
+	title: qsTr("WSRemoteGPIO")
 
 
 	model: VisualModels {
@@ -57,7 +57,7 @@ MbPage {
 
 			MbSwitch {                                  
             	id: restart                           
-            	name: qsTr("Restart RemoteGPIO Service")
+            	name: qsTr("Restart WSRemoteGPIO Service")
 				bind: [rgpioSettings, "/Restart"]
 				show: enable.checked                 
         	}         

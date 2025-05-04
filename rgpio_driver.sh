@@ -33,7 +33,7 @@ get_string()
 
 # Variables Declaration
 zero=0
-nbunit=$(get_setting /Settings/RemoteGPIO/NumberUnits)
+nbunit=$(get_setting /Settings/WSRemoteGPIO/NumberUnits)
 
 declare -a conf_unitx_relay
 declare -a conf_unitx_diginp
@@ -52,18 +52,18 @@ declare -a hw_type
 #Variables Initialization
 for ((ind_unit=1; ind_unit<=$nbunit; ind_unit++))
 do
-	conf_unitx_relay[$ind_unit]="/data/RemoteGPIO/FileSets/Conf/Relays_unit"${ind_unit}".conf"
-	conf_unitx_diginp[$ind_unit]="/data/RemoteGPIO/FileSets/Conf/Digital_Inputs_unit"${ind_unit}".conf"
+	conf_unitx_relay[$ind_unit]="/data/WSRemoteGPIO/FileSets/Conf/Relays_unit"${ind_unit}".conf"
+	conf_unitx_diginp[$ind_unit]="/data/WSRemoteGPIO/FileSets/Conf/Digital_Inputs_unit"${ind_unit}".conf"
 
 	prev_relay_status[$ind_unit]=""
 	prev_diginp_status[$ind_unit]=""
 
-	read_relays[$ind_unit]=$(get_setting /Settings/RemoteGPIO/Unit${ind_unit}/ReadRelays)
-	read_diginps[$ind_unit]=$(get_setting /Settings/RemoteGPIO/Unit${ind_unit}/ReadDigin)
+	read_relays[$ind_unit]=$(get_setting /Settings/WSRemoteGPIO/Unit${ind_unit}/ReadRelays)
+	read_diginps[$ind_unit]=$(get_setting /Settings/WSRemoteGPIO/Unit${ind_unit}/ReadDigin)
 
-	protocol_unitx[$ind_unit]=$(get_setting /Settings/RemoteGPIO/Unit${ind_unit}/Protocol)
-	port_unitx[$ind_unit]=$(get_string /Settings/RemoteGPIO/Unit${ind_unit}/USB_Port)
-	ip_unitx[$ind_unit]=$(get_string /Settings/RemoteGPIO/Unit${ind_unit}/IP)	
+	protocol_unitx[$ind_unit]=$(get_setting /Settings/WSRemoteGPIO/Unit${ind_unit}/Protocol)
+	port_unitx[$ind_unit]=$(get_string /Settings/WSRemoteGPIO/Unit${ind_unit}/USB_Port)
+	ip_unitx[$ind_unit]=$(get_string /Settings/WSRemoteGPIO/Unit${ind_unit}/IP)	
 	# it could be useful to have a new property from setup that drives hw dimension, at the moment it is static
 	# this property map on the first dimension of the commands array
 	hw_type[$ind_unit]="WAVESHARE"
@@ -75,9 +75,9 @@ declare -a cmd_read_relay_status
 declare -a cmd_read_diginp_status
 
 # just one hw and one protocol (rtu), ready for expansions
-cmd_write_relay_status["WAVESHARE",0]="/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -t0 -r0 -c\$ai -a\$ind_unit -o\$timeout \${port_unitx[\$ind_unit]} \$const_string"
-cmd_read_relay_status["WAVESHARE",0]="/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -t0 -r0 -c\$ai -a\$ind_unit -o\$timeout \${port_unitx[\$ind_unit]}"
-cmd_read_diginp_status["WAVESHARE",0]="/data/RemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -t1 -r0 -c\$ai -a\$ind_unit -o\$timeout \${port_unitx[\$ind_unit]}"
+cmd_write_relay_status["WAVESHARE",0]="/data/WSRemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -t0 -r0 -c\$ai -a\$ind_unit -o\$timeout \${port_unitx[\$ind_unit]} \$const_string"
+cmd_read_relay_status["WAVESHARE",0]="/data/WSRemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -t0 -r0 -c\$ai -a\$ind_unit -o\$timeout \${port_unitx[\$ind_unit]}"
+cmd_read_diginp_status["WAVESHARE",0]="/data/WSRemoteGPIO/bin/modpoll/arm-linux-gnueabihf/modpoll -m rtu -b115200 -p none -d8 -s1 -0 -1 -t1 -r0 -c\$ai -a\$ind_unit -o\$timeout \${port_unitx[\$ind_unit]}"
 
 # utility variables
 timer=$(date +%s)
@@ -160,7 +160,7 @@ do
 	if (( (timer + 5) < $(date +%s) ))
 	then
 		timer=$(date +%s)
-		set_setting /Settings/Watchdog/RemoteGPIO variant:int32:$timer
+		set_setting /Settings/Watchdog/WSRemoteGPIO variant:int32:$timer
 		echo "Heartbeat tempesta = "$(date -d@$timer)
 	fi
 done

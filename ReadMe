@@ -11,7 +11,7 @@ If everything will go fine at the end I could submit a pull request for merge.
 ________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 **********************************************************
-***********              RemoteGPIO               ********
+***********              WSRemoteGPIO               ********
 ***********   PLEASE READ IMPORTANT INFORMATION   ********
 ***********   INSTALL/SETUP INSTRUCTIONS BELOW    ********
 **********************************************************
@@ -26,13 +26,13 @@ Thanks to drtinaz for the optimisations added since first v3.x release
 Supports for Cerbo GX MK2 and more likely Raspberry Pi as well
 
 ************* UPDATE as of v3.3.0 **********
-Several settings menu enhancements. Added option to enable/disable digital inputs per module. Added option to 'Restart RemoteGPIO' from the menu. Overall cpu usage can be reduced by up to 75% depending on number of modules and options selected.
+Several settings menu enhancements. Added option to enable/disable digital inputs per module. Added option to 'Restart WSRemoteGPIO' from the menu. Overall cpu usage can be reduced by up to 75% depending on number of modules and options selected.
 
 ************* UPDATE as of v3.2.1 **********
-Now supports reading of external relay state and dynamically updating the gui. (Useful for those people who have methods of switching the relays from external sources, such as switches connected directly to the relay modules). If using node-red logic to control the external relays, it is important that you also include a debounce method to eliminate looping. This feature is disabled by default and can be enabled from within RemoteGPIO settings.
+Now supports reading of external relay state and dynamically updating the gui. (Useful for those people who have methods of switching the relays from external sources, such as switches connected directly to the relay modules). If using node-red logic to control the external relays, it is important that you also include a debounce method to eliminate looping. This feature is disabled by default and can be enabled from within WSRemoteGPIO settings.
 
 ************* UPDATE As of v3.2 ************
-RemoteGPIO is now working with up to 3 relay modules, with a total of up to 16 relays/inputs across all connected/active modules. Number of modules and relays per module can be changed dynamically from the RemoteGPIO menu in gui (menu>IO>RemoteGPIO).
+WSRemoteGPIO is now working with up to 3 relay modules, with a total of up to 16 relays/inputs across all connected/active modules. Number of modules and relays per module can be changed dynamically from the WSRemoteGPIO menu in gui (menu>IO>WSRemoteGPIO).
 
 Each module may select 2, 4 or 8 relays/inputs.
 You may select any combination of modules and number of relays/inputs for each module as long as the total number of relays/inputs accross all connected/active modules does not exceed 16x.
@@ -40,7 +40,7 @@ You may select any combination of modules and number of relays/inputs for each m
 
 *********************    NEW VERSION 3.x    **************************
 
-RemoteGPIO is now working natively with D-Bus and no longer requires Node-Red to be installed.
+WSRemoteGPIO is now working natively with D-Bus and no longer requires Node-Red to be installed.
 Built in relays and additionnal relays (up to a total of 18) are displayed on a single scrolling Relay Overview page (Thank you to Kevin Windrem and GuiMods).
 Additional Digital Inputs are also supported and available for configuration via the IO/Digital Inputs settings page.
 
@@ -48,9 +48,9 @@ In previous version the « driver » for controlling the relays was implemente
 Now the driver is integrated as native D-Bus and is running as a service in Venus OS.
 
 Node-Red is still useful for adding any logics to turn on or off any relays based on external dependencies.
-These changes are reducing the CPU load (about 4% usage) and are decreasing latency. (Latency can be set in RemoteGPIO configuration menu high/medium/low).
+These changes are reducing the CPU load (about 4% usage) and are decreasing latency. (Latency can be set in WSRemoteGPIO configuration menu high/medium/low).
 
-It is recommended to use USB adapters based on FTDI FT232R chipset and program it with Product Description = "RemoteGPIO"
+It is recommended to use USB adapters based on FTDI FT232R chipset and program it with Product Description = "WSRemoteGPIO"
 
 
 *******************************************
@@ -66,14 +66,14 @@ It is recommended to use USB adapters based on FTDI FT232R chipset and program i
 		b:	Find GuiMods in the list and add it to active packages
 		c:	Wait until GuiMods installs and reboots the gui
 
-3:	Install RemoteGPIO
+3:	Install WSRemoteGPIO
 		a:	Go to settings>package manager>inactive packages.
-		b:	Find RemoteGPIO in the list and add it to active packages.
-			(If RemoteGPIO is not on the list, it can be added manually > Package Name:RemoteGPIO githubusername:Lucifer06 branch/tag:main)
+		b:	Find WSRemoteGPIO in the list and add it to active packages.
+			(If WSRemoteGPIO is not on the list, it can be added manually > Package Name:WSRemoteGPIO githubusername:Lucifer06 branch/tag:main)
 		c:	Once install is complete, the system will reboot.
 
-4:	Enable and configure RemoteGPIO
-		a:	Go to menu>IO>RemoteGPIO and enable RemoteGPIO.
+4:	Enable and configure WSRemoteGPIO
+		a:	Go to menu>IO>WSRemoteGPIO and enable WSRemoteGPIO.
 		b:	Select number of relay modules
 		c:	For each module unit select the protocol, USB port (if using rs485), IP address of the module, and the number of relays for each module.
 		d:	Reboot the venus device
@@ -106,35 +106,35 @@ Configure the RS485 with Protocol Modbus-RTU and set address to 1 (for the first
 Install the desired VenusOS Large version (minimum v2.92) 
 Enable Node-RED (Settings/Venus OS Large features)
 
-3/ Install RemoteGPIO
+3/ Install WSRemoteGPIO
 Make sure SetupHelper from Kwindrem is installed. If not follow instructions from https://github.com/kwindrem/SetupHelper
-Add RemoteGPIO repo if not already listed in the inactive packages RemoteGPIO Lucifer06:main
+Add WSRemoteGPIO repo if not already listed in the inactive packages WSRemoteGPIO Lucifer06:main
 Download and install the package
 BE PATIENT during the Installation of the package, it can takes few minutes as it downloads few Node-RED palettes
 Reboot will be required for the USB to be not anymore preempted by VenusOS services
 
 
-Using RemoteGPIO:
+Using WSRemoteGPIO:
 =================
-1/ RemoteGPIO can be used from VenusOS GUI to control 4x additional relays.
+1/ WSRemoteGPIO can be used from VenusOS GUI to control 4x additional relays.
 It is required to install Kwindrem's GuiMods package (https://github.com/kwindrem/GuiMods)
 Go to Settings/Relay there are 4x additional relays to be enabled and then use the dedicated Relay page that should display the additional relays
 
-2/ RemoteGPIO can also be used with Node-RED
+2/ WSRemoteGPIO can also be used with Node-RED
 With Node-Red it is possible to use all 8x relays as well as the 8x digital inputs
 During the installation of the package, the following Node-RED palettes are automatically installed:
 	— node-red-dashboard
 	— node-red-contrib-buffer-parser
 	— node-red-contrib-debounce
-If there was no flows yet running the RemoteGPIO flow got installed
-If a flow was already installed, in order to not break anything RemoteGPIO will need to be manually imported from the local library (Menu Import / Local / RemoteGPIO.json)
-The RemoteGPIO flow is also adding a Node-RED dashboard for controlling the Relays and monitoring the Digital Inputs
-RemoteGPIO v2.x is backward compatible with previous venus_rgpio (https://community.victronenergy.com/questions/166784/solution-adding-external-relays-to-cerbo-gx-using.html).
+If there was no flows yet running the WSRemoteGPIO flow got installed
+If a flow was already installed, in order to not break anything WSRemoteGPIO will need to be manually imported from the local library (Menu Import / Local / WSRemoteGPIO.json)
+The WSRemoteGPIO flow is also adding a Node-RED dashboard for controlling the Relays and monitoring the Digital Inputs
+WSRemoteGPIO v2.x is backward compatible with previous venus_rgpio (https://community.victronenergy.com/questions/166784/solution-adding-external-relays-to-cerbo-gx-using.html).
 
 
 Troubleshooting:
 ================
-Any questions or suggestions about RemoteGPIO are welcome here: https://community.victronenergy.com/questions/245584/remotegpio-ex-venus-rgpio-now-available-with-setup.html
+Any questions or suggestions about WSRemoteGPIO are welcome here: https://community.victronenergy.com/questions/245584/WSRemoteGPIO-ex-venus-rgpio-now-available-with-setup.html
 
 Most of the issues are coming from USBtoRS485 adapter been trapped by the wrong VenusOS service.
 In order to make it working with default configuration file, it is important to attach it to the first USB port.

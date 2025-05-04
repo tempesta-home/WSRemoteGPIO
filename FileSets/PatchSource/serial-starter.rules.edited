@@ -1,4 +1,4 @@
-# ** RemoteGPIO **
+# ** WSRemoteGPIO **
 #
 # There are 2x possible strategies:
 # 1/ With generic USB to RS485 interface that is not possible to reprogram such as the ones based on CH340 chipset
@@ -8,12 +8,12 @@
 #ACTION=="add", ENV{ID_BUS}=="usb", ENV{ID_PATH_TAG}=="platform-1c14400_usb-usb-0_1_1_0", ENV{VE_SERVICE}="ignore"
 #
 # 2/ With FTDI based USB to RS485 interface, it is possible to reprogram it and allow us to identify it. We recommend to go with TF232R chipset based.
-# Instructions on how to reprogram the USB adapter are provided here: https://community.victronenergy.com/questions/245584/remotegpio-ex-venus-rgpio-now-available-with-setup.html
-# => The strategy is to identify the ID_Model with "RemoteGPIO"
+# Instructions on how to reprogram the USB adapter are provided here: https://community.victronenergy.com/questions/245584/WSRemoteGPIO-ex-venus-rgpio-now-available-with-setup.html
+# => The strategy is to identify the ID_Model with "WSRemoteGPIO"
 #
-ACTION=="add", ENV{ID_BUS}=="usb", ENV{ID_MODEL}=="RemoteGPIO", ENV{VE_SERVICE}="ignore"
+ACTION=="add", ENV{ID_BUS}=="usb", ENV{ID_MODEL}=="WSRemoteGPIO", ENV{VE_SERVICE}="ignore"
 #
-# ** RemoteGPIO **
+# ** WSRemoteGPIO **
 
 ACTION=="add", SUBSYSTEM=="tty", SUBSYSTEMS=="platform|usb-serial", SYMLINK+="serial-starter/%k"
 ACTION=="remove", SUBSYSTEM=="tty", SUBSYSTEMS=="platform|usb-serial", RUN+="/opt/victronenergy/serial-starter/cleanup.sh %k"

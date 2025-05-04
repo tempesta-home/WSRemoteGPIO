@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# this script installs RemoteGPIO v3.0 following SetupHelper rules (https://github.com/kwindrem/SetupHelper)
+# this script installs WSRemoteGPIO v3.0 following SetupHelper rules (https://github.com/kwindrem/SetupHelper)
 #
 # this script will accept the following commands on the command line:
 #	setup install
 #	setup uninstall
 
-packageLogFile="/var/log/RemoteGPIO/current"
+packageLogFile="/var/log/WSRemoteGPIO/current"
 
 #### following lines incorporate helper resources into this script
 pkgDir=$( dirname $0 )
@@ -32,7 +32,7 @@ packageGitHubBranch="main"
 #### running manually and OK to proceed - prompt for input
 if [ $scriptAction == 'NONE' ] ; then
 	echo
-	echo "The RemoteGPIO is adding external Relays and Digital Inputs"
+	echo "The WSRemoteGPIO is adding external Relays and Digital Inputs"
 	echo "with Dingtian IOT Relay devices either connected via USB or TCP"
 	echo
 	standardActionPrompt
@@ -41,19 +41,19 @@ fi
 #### here to do the actual work
 
 if [ $scriptAction == 'INSTALL' ] ; then
-	logMessage "++ Installing RemoteGPIO"
+	logMessage "++ Installing WSRemoteGPIO"
 
 	##
-	## Prepare the devices in /data/RemoteGPIO/sys and conf folder
+	## Prepare the devices in /data/WSRemoteGPIO/sys and conf folder
 	##############################################################
-	tar -xvf /data/RemoteGPIO/FileSets/VersionIndependent/sys.tar.gz -C /data/RemoteGPIO/
-	tar -xvf /data/RemoteGPIO/FileSets/VersionIndependent/bin.tar.gz -C /data/RemoteGPIO/
-	mkdir /data/RemoteGPIO/conf
-	chmod 777 /data/RemoteGPIO/conf
-	touch /data/RemoteGPIO/conf/relays.conf
-	chmod 666 /data/RemoteGPIO/conf/relays.conf
-	echo "0" > /data/RemoteGPIO/conf/relays.conf
-	mkdir /var/log/RemoteGPIO
+	tar -xvf /data/WSRemoteGPIO/FileSets/VersionIndependent/sys.tar.gz -C /data/WSRemoteGPIO/
+	tar -xvf /data/WSRemoteGPIO/FileSets/VersionIndependent/bin.tar.gz -C /data/WSRemoteGPIO/
+	mkdir /data/WSRemoteGPIO/conf
+	chmod 777 /data/WSRemoteGPIO/conf
+	touch /data/WSRemoteGPIO/conf/relays.conf
+	chmod 666 /data/WSRemoteGPIO/conf/relays.conf
+	echo "0" > /data/WSRemoteGPIO/conf/relays.conf
+	mkdir /var/log/WSRemoteGPIO
 
 	
 	##
@@ -66,14 +66,14 @@ if [ $scriptAction == 'INSTALL' ] ; then
 		then
 		cp /usr/lib/node_modules/@victronenergy/node-red-contrib-victron/src/services/services.json /usr/lib/node_modules/@victronenergy/node-red-contrib-victron/src/services/services.json.orig
 		fi
-		patch /usr/lib/node_modules/@victronenergy/node-red-contrib-victron/src/services/services.json /data/RemoteGPIO/FileSets/PatchSource/services.json.patch
+		patch /usr/lib/node_modules/@victronenergy/node-red-contrib-victron/src/services/services.json /data/WSRemoteGPIO/FileSets/PatchSource/services.json.patch
 		
 	fi
 	
 	##
 	## For supports of Cerbo GX MK2
 	###############################
-	patch /opt/victronenergy/dbus-digitalinputs/start-digitalinputs.sh /data/RemoteGPIO/FileSets/PatchSource/start-digitalinputs.sh.patch
+	patch /opt/victronenergy/dbus-digitalinputs/start-digitalinputs.sh /data/WSRemoteGPIO/FileSets/PatchSource/start-digitalinputs.sh.patch
 
 
 	logMessage "++ $packageName installed"
@@ -83,7 +83,7 @@ fi
 # #### uninstalling - check scriptAction again
 # if an install step failed package needs to be removed
 if [ $scriptAction == 'UNINSTALL' ] ; then
-    logMessage "++ Uninstalling RemoteGPIO"
+    logMessage "++ Uninstalling WSRemoteGPIO"
 
 
 
@@ -92,7 +92,7 @@ if [ $scriptAction == 'UNINSTALL' ] ; then
 	#############################################
 	if [ $(dbus -y com.victronenergy.settings /Settings/System/ImageType GetValue) == 1 ]
 	then
-		patch -R /usr/lib/node_modules/@victronenergy/node-red-contrib-victron/src/services/services.json /data/RemoteGPIO/FileSets/PatchSource/services.json.patch
+		patch -R /usr/lib/node_modules/@victronenergy/node-red-contrib-victron/src/services/services.json /data/WSRemoteGPIO/FileSets/PatchSource/services.json.patch
 		
 	fi
 
@@ -133,7 +133,7 @@ if [ $scriptAction == 'UNINSTALL' ] ; then
 	rm -f /dev/gpio/digital_input_j
 	rm -f /dev/gpio/digital_input_k
 	
-	rm -Rf /data/RemoteGPIO/conf
+	rm -Rf /data/WSRemoteGPIO/conf
 	
 	
 		

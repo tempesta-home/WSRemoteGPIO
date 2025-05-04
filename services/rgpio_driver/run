@@ -1,4 +1,4 @@
 #!/bin/sh
-echo "*** starting RemoteGPIO ***"
+echo "*** starting WSRemoteGPIO ***"
 exec 2>&1
-exec /data/RemoteGPIO/rgpio_driver
+exec /data/WSRemoteGPIO/rgpio_driver

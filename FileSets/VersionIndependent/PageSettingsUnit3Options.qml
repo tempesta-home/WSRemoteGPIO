@@ -5,8 +5,8 @@ import "utils.js" as Utils
 MbPage {
 	id: root
 
-        property string rgpioSettings: "dbus/com.victronenergy.settings/Settings/RemoteGPIO/Unit3"
-        property string serviceSetting: "dbus/com.victronenergy.settings/Settings/Services/RemoteGPIO"
+        property string rgpioSettings: "dbus/com.victronenergy.settings/Settings/WSRemoteGPIO/Unit3"
+        property string serviceSetting: "dbus/com.victronenergy.settings/Settings/Services/WSRemoteGPIO"
 
 	title: qsTr("Unit 3 Options")
 

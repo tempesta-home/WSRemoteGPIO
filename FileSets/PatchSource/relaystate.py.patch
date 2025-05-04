@@ -1,5 +1,5 @@
---- /mnt/c/github/RemoteGPIO.copy/FileSets/PatchSource/relaystate.py.source	2024-02-26 05:42:09.000000000 -0700
-+++ /mnt/c/github/RemoteGPIO.copy/FileSets/PatchSource/relaystate.py.edited	2024-03-23 14:42:16.029444300 -0700
+--- /mnt/c/github/WSRemoteGPIO.copy/FileSets/PatchSource/relaystate.py.source	2024-02-26 05:42:09.000000000 -0700
++++ /mnt/c/github/WSRemoteGPIO.copy/FileSets/PatchSource/relaystate.py.edited	2024-03-23 14:42:16.029444300 -0700
 @@ -24,7 +24,24 @@
  	def get_settings(self):
  		return [
